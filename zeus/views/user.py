@@ -2,7 +2,8 @@ from datetime import datetime
 from flask import render_template, request, redirect, url_for, abort
 from zeus import app, db
 from zeus.models.user import User
-from zeus.lib.smartcar import client
+from zeus.models.vehicle import Vehicle
+from zeus.utils.smartcar import client, smartcar
 
 @app.route("/user/login", methods=['GET'])
 def login_page():
@@ -41,10 +42,44 @@ def create_user():
 def user_page(user_id):
     user = User.query.get(user_id)
     return render_template("user.html",
-       vehicles = user.vehicles,
-       auth_url=client().get_auth_url()
+        vehicles=user.vehicles,
+        auth_url=client.get_auth_url(state=user_id)
     )
 
 @app.route("/user/<int:user_id>", methods=['PUT'])
 def update_user(user_id):
     pass
+
+
+@app.route('/callback', methods=['GET'])
+def callback():
+    """
+    Used on Smartcar OAuth redirect
+    """
+    code = request.args.get('code')
+    user_id = request.args.get('state')
+    access = client.exchange_code(code)
+    access_token = access['access_token']
+
+    vehicles = smartcar.get_vehicle_ids(access_token)['vehicles']
+    vid = vehicles[0]
+
+    info = smartcar.Vehicle(vid, access_token).info()
+    vin = smartcar.Vehicle(vid, access_token).vin()
+
+    new_vehicle = Vehicle(
+        id=vid,
+        user_id=user_id,
+        vin=vin,
+        make=info['make'],
+        model=info['model'],
+        year=info['year'],
+        access_token=access['access_token'],
+        access_expiration=access['expiration'],
+        refresh_token=access['refresh_token'],
+    )
+
+    db.session.add(new_vehicle)
+    db.session.commit()
+
+    return redirect(url_for("user_page", user_id=user_id))
