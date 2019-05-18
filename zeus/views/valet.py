@@ -15,3 +15,10 @@ def valet_login_verify():
 @app.route("/valet/dashboard", methods=['GET'])
 def valet_page():
     return render_template("valet.html")
+
+@app.route("/valet/next", methods=['GET'])
+def valet_next_car():
+    """
+    Calculate and return the next vehicle swap to the client
+    """
+    pass
