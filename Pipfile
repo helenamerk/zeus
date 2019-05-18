@@ -10,6 +10,8 @@ name = "pypi"
 flask = "*"
 blinker = "*"
 simplejson = "*"
+sqlalchemy = "*"
+flask-sqlalchemy = "*"
 
 
 [dev-packages]
