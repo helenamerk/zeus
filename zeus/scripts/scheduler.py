@@ -24,6 +24,8 @@ class Queue:
         # return self.queue
 
     def pop(self):
+        if not self.queue:
+            return None
         return self.queue[0]
 
 

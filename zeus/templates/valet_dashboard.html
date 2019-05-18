@@ -35,18 +35,17 @@
     range requested by their owners.
   </p>
   {% endif %} {% if vehicles|length > 0 %}{% for vehicle in vehicles %}
-  <div class="row">
-    <h1>{{ vehicle.vin }}</h1>
-    <img
-      class="mb-4"
-      src="/static/car.png"
-      alt=""
-      width="130"
-      height="100"
-    />
-    <h2>Control Vehicle</h2>
-    <h4>{{ vehicle.id }} Parked in spot {{ vehicle.spot.id }}</h4>
+  <row style="border-top: 2px solid #d0d0d0; margin-top: 50px; margin-bottom: 50px; width: 100%;"></row>
+  <div class="row justify-content-md-center mb-4">
+      <div style="col-md">
+        <div class="alert alert-success" role="alert">
+          Please move completed vehicles out of charger spot
+        </div>
+      </div>
 
+  <div class="row justify-content-md-center text-center mb-4 card">
+    <div class="col-md mt-4">
+      <h4><span class="badge badge-secondary">{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</span> is parked in spot <span class="badge badge-secondary">{{ vehicle.spot.id }}</span></h4>
     <form
       class="form-login text-center"
       method="post"
@@ -67,6 +66,9 @@
         value="Unlock"
       />
     </form>
+    </div>
+  </div>
+
   </div>
 
   {% endfor %} {% endif %}
