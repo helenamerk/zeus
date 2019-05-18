@@ -3,7 +3,7 @@ from flask import render_template, request, redirect, url_for, abort
 from zeus import app, db
 from zeus.models.user import User
 from zeus.models.vehicle import Vehicle
-from zeus.utils.smartcar import client, smartcar
+from zeus.utils.smartcar import client, smartcar, get_battery, get_charge
 
 @app.route("/user/login", methods=['GET'])
 def login_page():
@@ -66,6 +66,9 @@ def callback():
 
     info = smartcar.Vehicle(vid, access_token).info()
     vin = smartcar.Vehicle(vid, access_token).vin()
+
+    battery = get_battery(vid, access_token)
+    charge = get_charge(vid, access_token)
 
     new_vehicle = Vehicle(
         id=vid,

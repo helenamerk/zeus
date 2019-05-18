@@ -1,5 +1,7 @@
 from flask import render_template, redirect
 from zeus import app
+from zeus.models.vehicle import Vehicle
+from zeus.utils.smartcar import smartcar
 
 @app.route("/valet/login", methods=['GET'])
 def valet_login_page():
@@ -32,14 +34,41 @@ def valet_page():
         # Button(s) to move vehicle out of charging spot
         # Button to start valet_next_car() process
     ###
+    completedVehicles = []
+    completedVehicles.append({'id': '12345', 'spot': '123'})
+    completedVehicles.append({'id': '12346', 'spot': '222'})
 
-    return render_template("valet_dashboard.html", vehicles=[{'spot': '123'}, {'spot': '222'}])
+    return render_template("valet_dashboard.html", vehicles=completedVehicles)
+
+@app.route("/valet/<int:vehicle_id>/unlock", methods=['POST'])
+def valet_unlock(vehicle_id):
+    # vehicle = Vehicle.query.get(vehicle_id)
+    # smartcar.unlock(vehicle.id, vehicle.access_token)
+    print('IMPLEMENT UNLOCKING HERE')
+    # unlock vehicle id and drive
+    return render_template("valet_driving.html", vehicle_id=vehicle_id)
+
+@app.route("/valet/<int:vehicle_id>/lock", methods=['POST'])
+def valet_lock(vehicle_id):
+    # unlock vehicle id and drive
+    # vehicle = Vehicle.query.get(vehicle_id)
+    # smartcar.lock(vehicle.id, vehicle.access_token)
+
+    print('IMPLEMENT LOCKING HERE')
+    print('Record new state (NOT CHARGING) and new parking spot in db ')
+
+    next_vehicle=valet_next_car()
+    
+    return redirect("/valet/dashboard")
+
 
 @app.route("/valet/next", methods=['GET'])
 def valet_next_car():
-    # calculate next car in queue
-    # => proceed to flow (unlock, move, plug, lock)
     """
     Calculate and return the next vehicle swap to the client
     """
-    pass
+    # calculate next car in queue
+    # => proceed to flow (unlock, move, plug, lock)
+    temp_vehicle = {'id': '123123123', 'spot': '1101'}
+    return temp_vehicle
+    
