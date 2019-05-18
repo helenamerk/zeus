@@ -5,6 +5,7 @@ from zeus import db
 class Vehicle(db.Model):
 
     id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
     # Static data
     vin = Column(String)

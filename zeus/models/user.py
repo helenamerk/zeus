@@ -9,6 +9,7 @@ class User(db.Model):
     # Login credentials
     username = Column(String, index=True)
     password_hash = Column(String)
+    vehicles = db.relationship('Vehicle', backref='user', lazy=True)
 
     # Profile settings
     today_departure = Column(DateTime)

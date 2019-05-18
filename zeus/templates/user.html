@@ -9,7 +9,7 @@
 {% block body %}
   <div class="container">
 
-    {% if not has_vehicle %}
+    {% if not vehicles %}
     <div class="row">
       <div class="col-md">
         <div class="jumbotron">
@@ -19,9 +19,8 @@
         </div>
       </div>
     </div>
-    {% endif %}
+    {% else %}
 
-    {% if has_vehicle %}
      <!-- TODO collect user prefs -->
     {% endif %}
 

@@ -39,9 +39,10 @@ def create_user():
 
 @app.route("/user/<int:user_id>", methods=['GET'])
 def user_page(user_id):
-    has_vehicle = False
+    user = User.query.get(user_id)
+    print(user.vehicles)
     return render_template("user.html",
-       has_vehicle=has_vehicle,
+       vehicles = user.vehicles,
        auth_url=client().get_auth_url()
     )
 
