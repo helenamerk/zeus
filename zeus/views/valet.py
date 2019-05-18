@@ -2,12 +2,24 @@ from flask import render_template, redirect
 from zeus import app, db
 from zeus.models.vehicle import Vehicle
 from zeus.utils.smartcar import smartcar, lock, unlock, get_battery
+from zeus.utils.onesignal import notify_action
 from zeus.models.spot import Spot, SpotType
 from sqlalchemy import and_
+from zeus.scripts.scheduler import Queue
 
 
 def identify_next_car():
-    return {'make': 'Volkswagen', 'model': 'e-Golf', 'year': 2017, 'spot': '11'}
+    q = Queue()
+    q.populate_queue()
+    vehicle = q.pop()
+    return {
+        'id': vehicle.id,
+        'vin': vehicle.vin,
+        'make': vehicle.make,
+        'model': vehicle.model,
+        'year': vehicle.year,
+        'spot': vehicle.spot.id
+    }
 
 def check_threshold(busy_ev_spots):
     completedVehicles = []
@@ -21,6 +33,7 @@ def check_threshold(busy_ev_spots):
         if (battery.range > vehicle.desired_range):
             print(vehicle.id + ' is beyond the requested range :)')
             completedVehicles.append(vehicle)
+            notify_action('CAPACITY', spot.vehicle_id)
 
     return completedVehicles
 
@@ -57,6 +70,8 @@ def valet_page():
 
 @app.route("/valet/<string:vehicle_id>/unlock", methods=['POST'])
 def valet_unlock(vehicle_id):
+    notify_action('UNLOCK', vehicle_id)
+
     vehicle = Vehicle.query.get(vehicle_id)
     unlock(vehicle.id, vehicle.access_token)
     print('IMPLEMENT UNLOCKING HERE')
@@ -65,6 +80,7 @@ def valet_unlock(vehicle_id):
 
 @app.route("/valet/<string:vehicle_id>/lock", methods=['POST'])
 def valet_lock(vehicle_id):
+    notify_action('LOCK', vehicle_id)
     
     # unlock vehicle id and drive
     vehicle = Vehicle.query.get(vehicle_id)
@@ -81,8 +97,10 @@ def valet_next_car():
     """
     Calculate and return the next vehicle swap to the client
     """
+    nextCar = identify_next_car()
+    notify_action('SELECTED', nextCar['id'])
     # calculate next car in queue
     # => proceed to flow (unlock, move, plug, lock)
 
-    return render_template("valet_driving.html", vehicle=identify_next_car())
+    return render_template("valet_driving.html", vehicle=nextCar)
     

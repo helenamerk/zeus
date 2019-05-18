@@ -1,5 +1,16 @@
 {% extends 'base.html' %} {% block title %}Zeus - User Preferences{% endblock %}
 {% block head %}
+<script>
+  OneSignal.push(function() {
+    OneSignal.sendTags({
+      vehicleId: '{{vehicle.id}}',
+    }).then(function(tagsSent) {
+      // Callback called when tags have finished sending
+      console.log(tagsSent);
+    });
+  });
+</script>
+
 <link rel="stylesheet" href="/static/login.css" />
 <script type="text/javascript" src="/path/to/jquery.js"></script>
 <script
@@ -48,8 +59,11 @@
       </tbody>
     </table>
   </div>
-  <form class="form" method="post" action="/vehicle/dequeue">
-    <button class="btn btn-sm btn-outline-danger" type="submit">Cancel</button>
-  </form>
+  {% if vehicle.spot is not none %}
+    <form class="form" method="post" action="/vehicle/dequeue">
+      <input type="hidden" id="vehicle_id" name="vehicle_id" value={{ vehicle.id }}>
+      <button class="btn btn-sm btn-outline-danger" type="submit">Cancel</button>
+    </form>
+  {% endif %}
 </div>
 {% endblock %}
