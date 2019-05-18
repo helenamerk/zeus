@@ -36,7 +36,7 @@
   <div class="container">
     <form
       class="form text-center form-login"
-      method="put"
+      method="post"
       action="/vehicle/queue"
     >
       <label for="selected_vehicle" class="sr-only">Selected Vehicle</label>
@@ -66,6 +66,7 @@
       >
         <input
           type="text"
+          name="departure_time"
           class="datetimepicker-input form-control middle-element"
           placeholder="Departure after"
           data-target="#datetimepicker3"
