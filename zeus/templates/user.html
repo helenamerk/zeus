@@ -1,9 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Hello User {{ user_id }}</title>
-</head>
-<body>
-	Hello User {{ user_id }}
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Zeus - User Preferences{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="/static/login.css">
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md">
+        <div class="jumbotron">
+          <h1 class="display-4">Welcome to Zeus!</h1>
+          <p class="lead">To get started, click below to connect your vehicle.</p>
+          <a class="mt-4 btn btn-lg btn-primary" href="" role="button">Connect Car</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}
