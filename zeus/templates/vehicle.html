@@ -38,6 +38,7 @@
         <td>{{ "{}".format(vehicle.spot.id) }}</td>
         <td>
           <form class="form" method="post" action="/vehicle/dequeue">
+            <input type="hidden" id="vehicle_id" name="vehicle_id" value={{ vehicle.id }}>
             <input class="btn btn-sm btn-primary btn-block" type="submit" value="Cancel" />
           </form>
         </td>
