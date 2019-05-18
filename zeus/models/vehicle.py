@@ -3,7 +3,7 @@ from sqlalchemy import Boolean, Column, Integer, Float, String, DateTime, Foreig
 from zeus import db
 from zeus.utils.smartcar import (
     client, AccessTokens, maybe_get_fresh_access_tokens,
-    get_battery, get_charge
+    get_battery, get_charge, ChargingState
 )
 
 class Vehicle(db.Model):
@@ -63,3 +63,13 @@ class Vehicle(db.Model):
         db.session.add(self)
         db.session.commit()
         return self
+
+    def charging_description(self):
+        if self.charge_state == ChargingState.FULLY_CHARGED:
+            return "Fully Charged"
+        if self.is_plugged_in and self.charge_state == ChargingState.CHARGING:
+            return "Charging"
+        if not self.is_plugged_in and self.charge_state == ChargingState.NOT_CHARGING:
+            return "Not Charging"
+        return "Possible Error"
+

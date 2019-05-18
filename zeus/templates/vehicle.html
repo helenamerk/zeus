@@ -1,0 +1,50 @@
+{% extends 'base.html' %} {% block title %}Zeus - User Preferences{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="/static/login.css" />
+<script type="text/javascript" src="/path/to/jquery.js"></script>
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"
+></script>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+/>
+<link rel="stylesheet" href="/static/login.css" />
+{% endblock %} {% block body %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Battery</th>
+      <th scope="col">Charging</th>
+      {% if vehicle.spot is not none  %}
+        <th scope="col">Estimated departure time</th>
+        <th scope="col">Parking Spot</th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ "{} {} ({})".format(vehicle.make, vehicle.model, vehicle.year) }}</td>
+      <td>{{ "{:.2%}".format(vehicle.percent_remaining) }}</td>
+      <td>{{ "{} {} {}".format(vehicle.charging_description(), vehicle.is_plugged_in, vehicle.charge_state ) }}</td>
+      {% if vehicle.spot is not none  %}
+        <td>{{ "{}".format(vehicle.departure_time.time()) }}</td>
+        <td>{{ "{}".format(vehicle.spot.id) }}</td>
+        <td>
+          <form class="form" method="post" action="/vehicle/dequeue">
+            <input class="btn btn-sm btn-primary btn-block" type="submit" value="Cancel" />
+          </form>
+        </td>
+      {% endif %}
+      </td>
+    </tr>
+  </tbody>
+</table>  
+  {% endblock %}
+</div>
