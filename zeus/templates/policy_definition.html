@@ -1,0 +1,81 @@
+{% extends 'base.html' %} {% block title %}Zeus - Policy Definition{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="/static/login.css" />
+<script type="text/javascript" src="/path/to/jquery.js"></script>
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"
+></script>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+/>
+<link rel="stylesheet" href="/static/login.css" />
+{% endblock %}
+{% block body %}
+<div class=container>
+    <table>
+      <tbody>
+        <tr>
+          <th scope="row">Incentive policy:</th>
+          <td>
+            <div>
+              <select autocomplete=off class="custom-select" id="incentive_policy_select" style="display:inline-block;width:auto;">
+                <option selected value="option1">Fine</option>
+                <option value="option2">Credit</option>
+                <option value="option3">Drop</option>
+                <option value="option4">Jump</option>
+                <option value="option5">None</option>
+              </select>
+              <div style="display:inline-block;" class="option1">
+                <input type="text" style="display:inline-block;text-align:right" size="1px" placeholder="2">$ every <input type="text" style="display:inline-block;text-align:right" size="1px" placeholder="1"> late pickups.
+              </div>
+              <div style="display:none;" class="option2">
+                <input type="text" style="display:inline-block;text-align:right" size="1px" placeholder="5">$ every <input type="text" style="display:inline-block;text-align:right" size="1px" placeholder="30"> on time pickups.
+              </div>
+              <div style="display:none;" class="option3">
+                by <input type="text" style="display:inline-block;text-align:right" size="1px" placeholder="2"> spots at the next scheduling decision every <input type="text" style="display:inline-block;text-align:right" size="1px" placeholder="1"> late pickups.
+              </div>
+              <div style="display:none;" class="option4">
+                by <input type="text" style="display:inline-block;text-align:right" size="1px" placeholder="2">$ spots at the next scheduling decision every <input type="text" style="display:inline-block;text-align:right" size="1px" placeholder="10"> on time pickups.
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="text-muted">Define an optional policy to incentivize ev owners (either with penalties or with rewards)</td>
+        </tr>
+        <tr>
+          <th scope="row">Scheduling policy:</th>
+          <td>
+            <div>
+              <select autocomplete=off class="custom-select" id="scheduling_policy_select" style="display:inline-block;width:auto;">
+                <option selected value="option1">FIFO</option>
+                <option value="option2">Least charging time first (minimize latency)</option>
+                <option value="option3">Highest paying first</option>
+              </select>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" class="text-muted">Define a scheduling policy that affects how we decide what ev we should start charging next</td>
+        </tr>
+      </tbody>
+    </table>
+    <a class="btn btn-outline-warning" type="submit" role="button" href="/metrics">Submit</a>
+
+  <script>
+    $(".custom-select").change(function() {
+      console.log(this, $(this).parent());
+      $(this).parent().find("div").not("."+this.value).css("display", "none");
+      $(this).parent().find("div."+this.value).css("display", "inline-block");
+    })
+  </script>
+</div>
+
+{% endblock %}
+</div>
