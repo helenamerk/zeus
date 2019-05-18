@@ -1,3 +1,5 @@
-# Create database tables
-init_db: venv
-	. venv/bin/activate; python db/models.py
+init_db:
+	python db/models.py
+
+run_app:
+	FLASK_APP=./zeus FLASK_ENV=development flask run
