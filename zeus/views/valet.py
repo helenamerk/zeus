@@ -1,4 +1,4 @@
-from flask import render_template, redirect
+from flask import render_template, redirect, request
 from zeus import app, db
 from zeus.models.vehicle import Vehicle
 from zeus.utils.smartcar import smartcar, lock, unlock, get_battery
@@ -12,13 +12,19 @@ def identify_next_car():
     q = Queue()
     q.populate_queue()
     vehicle = q.pop()
+    if not vehicle:
+        return None
+
+    print(vehicle.id)
+    spot = Spot.query.filter_by(vehicle_id=vehicle.id).first()
+
     return {
         'id': vehicle.id,
         'vin': vehicle.vin,
         'make': vehicle.make,
         'model': vehicle.model,
         'year': vehicle.year,
-        'spot': vehicle.spot.id
+        'spot': spot.id,
     }
 
 def check_threshold(busy_ev_spots):
@@ -81,11 +87,24 @@ def valet_unlock(vehicle_id):
 @app.route("/valet/<string:vehicle_id>/lock", methods=['POST'])
 def valet_lock(vehicle_id):
     notify_action('LOCK', vehicle_id)
+
+    spotMarked = request.form["parking"]
+    print('************')
+    print(spotMarked)
     
     # unlock vehicle id and drive
     vehicle = Vehicle.query.get(vehicle_id)
     lock(vehicle.id, vehicle.access_token)
 
+    rows_changed = Vehicle.query.filter_by(id=vehicle_id).update(dict(needs_charging=False))
+    rows_changed = Spot.query.filter_by(vehicle_id=vehicle_id).update(dict(vehicle_id=None))
+    rows_changed = Spot.query.filter_by(id=spotMarked).update(dict(vehicle_id=vehicle_id))
+    db.session.commit()
+
+   # db.session.
+    #Vehicle.update().where(id == vehicle.id).values(needs_charging=False)
+    #Spot.update().where(vehicle_id == vehicle.id).values(vehicle_id=None)
+    #Spot.update().where(id == spotMarked).values(vehicle_id=vehicle.id)
     print('TODO: Record new state (NOT CHARGING) and new parking spot in db ')
 
     next_vehicle=valet_next_car()
@@ -98,9 +117,12 @@ def valet_next_car():
     Calculate and return the next vehicle swap to the client
     """
     nextCar = identify_next_car()
-    notify_action('SELECTED', nextCar['id'])
-    # calculate next car in queue
-    # => proceed to flow (unlock, move, plug, lock)
+    if nextCar:
+        notify_action('SELECTED', nextCar['id'])
+        # calculate next car in queue
+        # => proceed to flow (unlock, move, plug, lock)
 
-    return render_template("valet_driving.html", vehicle=nextCar)
+        return render_template("valet_driving.html", vehicle=nextCar)
+    else:
+        return redirect("/valet/dashboard")
     

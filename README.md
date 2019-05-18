@@ -20,3 +20,11 @@ Run application:
 ```bash
 make run_app
 ```
+
+## Docker
+
+```bash
+docker-compose up
+```
+
+Site will be running live on http://localhost:8000

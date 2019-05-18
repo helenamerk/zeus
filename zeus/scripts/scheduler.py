@@ -2,6 +2,7 @@ from zeus.utils.smartcar import smartcar, get_battery, get_charge
 from zeus import db
 from zeus.models.vehicle import Vehicle
 from zeus.models.spot import Spot, SpotType
+from sqlalchemy import and_
 
 class Queue:
 
@@ -18,12 +19,19 @@ class Queue:
         #     print('\t desired_range: ', vehicle.desired_range)
 
         for vehicle in result:
-            self.queue.append(vehicle)
+            # do not add to queue if vehicle is already in a charging spot
+            res = Spot.query.filter(and_(Spot.vehicle_id == vehicle.id), (Spot.type==2)).all()
+            print('CREATING QUEUE')
+            print(res)
+            if len(res) != 1:
+                self.queue.append(vehicle)
 
         # print(self.queue)
         # return self.queue
 
     def pop(self):
+        if not self.queue:
+            return None
         return self.queue[0]
 
 
