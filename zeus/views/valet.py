@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, redirect
 from zeus import app
 
 @app.route("/valet/login", methods=['GET'])
@@ -8,9 +8,9 @@ def valet_login_page():
 @app.route("/valet/login", methods=['POST'])
 def valet_login_verify():
     """
-    Verify the valet's login credentials
+    Verify the valet's login credentials 
     """
-    pass
+    return redirect('dashboard')
 
 @app.route("/valet/dashboard", methods=['GET'])
 def valet_page():
