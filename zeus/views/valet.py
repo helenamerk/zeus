@@ -4,10 +4,18 @@ from zeus.models.vehicle import Vehicle
 from zeus.utils.smartcar import smartcar, lock, unlock, get_battery
 from zeus.models.spot import Spot, SpotType
 from sqlalchemy import and_
+from zeus.scripts.scheduler import Queue
 
 
 def identify_next_car():
-    return {'id': '123123123', 'spot': '1101'}
+
+    q = Queue()
+    q.populate_queue()
+    vehicle = q.pop()
+    return {
+        'id': vehicle.id,
+        'spot': vehicle.spot.type
+    }
 
 def check_threshold(busy_ev_spots):
     completedVehicles = []
