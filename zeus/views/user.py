@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, abort
 from zeus import app, db
 from zeus.models.user import User
 
@@ -7,12 +7,22 @@ from zeus.models.user import User
 def login_page():
     return render_template("user_login.html")
 
+def verify_password(user, password):
+    if not user or not user.verify_password(password):
+        return False
+    return True
+
 @app.route("/user/login", methods=['POST'])
 def login_verify():
     """
     Verify the user's login credentials
     """
-    pass
+    username = request.form.getlist("username")[0]
+    password = request.form.getlist("password")[0]
+    user = User.query.filter_by(username = username).first()
+    if not verify_password(user, password):
+        abort(403)
+    return redirect(url_for("user_page", user_id=user.id))
 
 @app.route("/user/signup", methods=['GET'])
 def signup_page():
