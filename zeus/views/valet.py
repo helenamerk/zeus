@@ -55,7 +55,7 @@ def valet_page():
 
     return render_template("valet_dashboard.html", open_ev_spots=count_ev_spots, vehicles=completedVehicles, next_vehicle=nextCar)
 
-@app.route("/valet/<int:vehicle_id>/unlock", methods=['POST'])
+@app.route("/valet/<string:vehicle_id>/unlock", methods=['POST'])
 def valet_unlock(vehicle_id):
     vehicle = Vehicle.query.get(vehicle_id)
     unlock(vehicle.id, vehicle.access_token)
@@ -63,8 +63,9 @@ def valet_unlock(vehicle_id):
     # unlock vehicle id and drive
     return render_template("valet_driving.html", vehicle_id=vehicle_id)
 
-@app.route("/valet/<int:vehicle_id>/lock", methods=['POST'])
+@app.route("/valet/<string:vehicle_id>/lock", methods=['POST'])
 def valet_lock(vehicle_id):
+    
     # unlock vehicle id and drive
     vehicle = Vehicle.query.get(vehicle_id)
     lock(vehicle.id, vehicle.access_token)
