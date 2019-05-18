@@ -19,8 +19,8 @@ def login_verify():
     """
     Verify the user's login credentials
     """
-    username = request.form.getlist("username")[0]
-    password = request.form.getlist("password")[0]
+    username = request.form["username"]
+    password = request.form["password"]
     user = User.query.filter_by(username = username).first()
     if not verify_password(user, password):
         abort(403)
@@ -33,7 +33,7 @@ def signup_page():
 @app.route("/user", methods=['POST'])
 def create_user():
     form_data = request.form
-    new_user = User(username=form_data.getlist("username")[0], password=form_data.getlist("password")[0])
+    new_user = User(username=form_data["username"], password=form_data["password"])
     db.session.add(new_user)
     db.session.commit()
     return redirect(url_for("user_page", user_id=new_user.id))
