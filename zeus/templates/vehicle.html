@@ -28,7 +28,7 @@
       <thead>
         <tr>
           <th scope="col">Battery</th>
-          <th scope="col">Charging</th>
+          <th scope="col">Charge State</th>
           {% if vehicle.spot is not none  %}
             <th scope="col">Estimated departure time</th>
             <th scope="col">Parking Spot</th>
@@ -38,7 +38,7 @@
       <tbody>
         <tr>
           <td>{{ "{:.2%}".format(vehicle.percent_remaining) }}</td>
-          <td>{{ "{} {} {}".format(vehicle.charging_description(), vehicle.is_plugged_in, vehicle.charge_state ) }}</td>
+          <td>{{ vehicle.charging_description() }}</td>
           {% if vehicle.spot is not none  %}
             <td>{{ vehicle.departure_time.time() }}</td>
             <td>{{ vehicle.spot.id }}</td>
