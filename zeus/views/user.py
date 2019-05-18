@@ -1,23 +1,8 @@
-import smartcar
 from datetime import datetime
 from flask import render_template, request, redirect, url_for, abort
 from zeus import app, db
 from zeus.models.user import User
-
-CLIENT_ID = '52e8d23b-b296-4f8b-89a0-18b64fac4b38'
-CLIENT_SECRET = '13a5b398-ebf1-433f-a82f-60a5224548d8'
-
-client = smartcar.AuthClient(
-    client_id=CLIENT_ID,
-    client_secret=CLIENT_SECRET,
-    redirect_uri='http://localhost:5000/callback',
-    scope=[
-        'read_vehicle_info',
-        'control_security',
-        'read_charge',
-        'read_battery',
-    ]
-)
+from zeus.lib.smartcar import client
 
 @app.route("/user/login", methods=['GET'])
 def login_page():
@@ -57,7 +42,7 @@ def user_page(user_id):
     has_vehicle = False
     return render_template("user.html",
        has_vehicle=has_vehicle,
-       auth_url=client.get_auth_url()
+       auth_url=client().get_auth_url()
     )
 
 @app.route("/user/<int:user_id>", methods=['PUT'])

@@ -1,27 +1,13 @@
-import smartcar
 import requests
 
 from flask import Flask, request, jsonify, render_template
 from zeus import app
+from zeus.lib.smartcar import client
 
-CLIENT_ID = '52e8d23b-b296-4f8b-89a0-18b64fac4b38'
-CLIENT_SECRET = '13a5b398-ebf1-433f-a82f-60a5224548d8'
-
-client = smartcar.AuthClient(
-    client_id=CLIENT_ID,
-    client_secret=CLIENT_SECRET,
-    redirect_uri='http://localhost:5000/callback',
-    scope=[
-        'read_vehicle_info',
-        'control_security',
-        'read_charge',
-        'read_battery',
-    ]
-)
 
 @app.route('/auth', methods=['GET'])
 def auth():
-    auth_url = client.get_auth_url()
+    auth_url = client().get_auth_url()
     return render_template('connect_car.html', auth_url=auth_url)
 
 def extended_sdk(vid, access_token, endpoint):
