@@ -22,7 +22,7 @@ client = smartcar.AuthClient(
 @app.route('/auth', methods=['GET'])
 def auth():
     auth_url = client.get_auth_url()
-    return f'''
+    return '''
         <h1>Get Started with Zeus ⚡!</h1>
         <h2>Optimizing EV charging queues.</h2>
         <a href={auth_url}>
@@ -32,7 +32,7 @@ def auth():
 
 def extended_sdk(vid, access_token, endpoint):
     url = 'https://api.smartcar.com/v1.0/vehicles/' + vid + '/' + endpoint
-    headers = {"Authorization": "Bearer " + access_token}   
+    headers = {"Authorization": "Bearer " + access_token}
     response = requests.get(url, headers=headers)
 
     return response.text
@@ -43,7 +43,7 @@ def init_vehicle_data(access):
     response = smartcar.get_vehicle_ids(access_token)
     vid = response['vehicles'][0]
     vehicle = smartcar.Vehicle(vid, access_token)
-    
+
     charge = extended_sdk(vid, access_token, 'charge')
     battery = extended_sdk(vid, access_token, 'battery')
 
