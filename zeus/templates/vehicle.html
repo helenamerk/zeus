@@ -1,5 +1,16 @@
 {% extends 'base.html' %} {% block title %}Zeus - User Preferences{% endblock %}
 {% block head %}
+<script>
+  OneSignal.push(function() {
+    OneSignal.sendTags({
+      vehicleId: '{{vehicle.id}}',
+    }).then(function(tagsSent) {
+      // Callback called when tags have finished sending
+      console.log(tagsSent);
+    });
+  });
+</script>
+
 <link rel="stylesheet" href="/static/login.css" />
 <script type="text/javascript" src="/path/to/jquery.js"></script>
 <script
