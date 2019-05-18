@@ -38,6 +38,7 @@ def smartcar_special_request(vid, access_token, endpoint):
 
 def get_battery(vid, access_token):
     response = smartcar_special_request(vid, access_token, 'battery')
+    print(response)
     return BatteryStatus(range=response['range'], percent_remaining=response['percentRemaining'])
 
 def get_charge(vid, access_token):
