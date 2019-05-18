@@ -83,7 +83,8 @@ def callback():
         percent_remaining=battery.percent_remaining,
         range=battery.range,
         charge_state=charge.state.value,
-        is_plugged_in=charge.is_plugged_in
+        is_plugged_in=charge.is_plugged_in,
+        needs_charging=True
     )
 
     db.session.add(new_vehicle)

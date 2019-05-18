@@ -59,8 +59,11 @@
       </tbody>
     </table>
   </div>
-  <form class="form" method="post" action="/vehicle/dequeue">
-    <button class="btn btn-sm btn-outline-danger" type="submit">Cancel</button>
-  </form>
+  {% if vehicle.spot is not none %}
+    <form class="form" method="post" action="/vehicle/dequeue">
+      <input type="hidden" id="vehicle_id" name="vehicle_id" value={{ vehicle.id }}>
+      <button class="btn btn-sm btn-outline-danger" type="submit">Cancel</button>
+    </form>
+  {% endif %}
 </div>
 {% endblock %}
