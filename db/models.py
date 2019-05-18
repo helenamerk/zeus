@@ -2,6 +2,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey
 
+# Follow documentation to define the engine:
+# https://docs.sqlalchemy.org/en/13/core/engines.html
 engine = create_engine('sqlite:///db.sqlite', echo=True)
 
 Base = declarative_base()
@@ -50,3 +52,7 @@ class Spot(Base):
 
     type = Column(String)
     vehicle_id = Column(Integer, ForeignKey('vehicle.id'), nullable=True)
+
+# Create all tables in the database
+if __name__ == '__main__':
+    Base.metadata.create_all(engine)
