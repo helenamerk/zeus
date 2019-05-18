@@ -32,7 +32,7 @@
     <tr>
       <td>{{ "{} {} ({})".format(vehicle.make, vehicle.model, vehicle.year) }}</td>
       <td>{{ "{:.2%}".format(vehicle.percent_remaining) }}</td>
-      <td>{{ "{} {} {}".format(vehicle.charging_description(), vehicle.is_plugged_in, vehicle.charge_state ) }}</td>
+      <td>{{ "{}".format(vehicle.charging_description()) }}</td>
       {% if vehicle.spot is not none  %}
         <td>{{ "{}".format(vehicle.departure_time.time()) }}</td>
         <td>{{ "{}".format(vehicle.spot.id) }}</td>
@@ -45,6 +45,6 @@
       </td>
     </tr>
   </tbody>
-</table>  
+</table>
   {% endblock %}
 </div>

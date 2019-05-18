@@ -58,18 +58,18 @@ class Vehicle(db.Model):
 
         self.percent_remaining = battery.percent_remaining
         self.range = battery.range
-        self.chage_state = charge.state.value
+        self.charge_state = charge.state.value
         self.is_plugged_in = charge.is_plugged_in
         db.session.add(self)
         db.session.commit()
         return self
 
     def charging_description(self):
-        if self.charge_state == ChargingState.FULLY_CHARGED:
+        if self.charge_state == ChargingState.FULLY_CHARGED.value:
             return "Fully Charged"
-        if self.is_plugged_in and self.charge_state == ChargingState.CHARGING:
+        if self.is_plugged_in and self.charge_state == ChargingState.CHARGING.value:
             return "Charging"
-        if not self.is_plugged_in and self.charge_state == ChargingState.NOT_CHARGING:
+        if not self.is_plugged_in and self.charge_state == ChargingState.NOT_CHARGING.value:
             return "Not Charging"
         return "Possible Error"
 

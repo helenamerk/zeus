@@ -19,7 +19,7 @@ def queue_vehicle():
     db.session.add(vehicle)
     db.session.add(spot)
     db.session.commit()
-    return redirect(f"/vehicle/{vehicle.id}")
+    return redirect("/vehicle/{}".format(vehicle.id))
 
 @app.route('/vehicle/<vehicle_id>', methods=['GET'])
 def vehicle(vehicle_id):
