@@ -8,7 +8,7 @@ class Spot(db.Model):
     id = Column(Integer, primary_key=True)
 
     type = Column(Integer)
-    vehicle_id = Column(Integer, ForeignKey('vehicle.id'), nullable=True)
+    vehicle_id = Column(String, ForeignKey('vehicle.id'), nullable=True)
 
 class SpotType(Enum):
     STANDARD = 1

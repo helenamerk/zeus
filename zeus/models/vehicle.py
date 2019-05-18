@@ -10,6 +10,7 @@ class Vehicle(db.Model):
 
     id = Column(String, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    spot = db.relationship('Spot', uselist=False, backref='vehicle', lazy=True)
 
     # Static data
     vin = Column(String)
