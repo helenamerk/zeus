@@ -7,7 +7,7 @@
 <div class="container">
   {% if next_vehicle %}
   <div class="row justify-content-md-center mb-4">
-    <div style="col-md">
+    <div style="col-md;">
       <div class="alert alert-info" role="alert">
         Please move vehicle to an open charger spot 
       </div>
@@ -28,13 +28,15 @@
     </div>
   </div>
 
-  {% endif %} {% if open_ev_spots > 0 %}
+  {% endif %}  {% if vehicles|length > 0 %}
+  {% if open_ev_spots > 0 %}
   <div class="row">
     There are currently {{ open_ev_spots }} open ev spots! No need to remove
     cars from chargers, but just in case you do, the following have exceeded the
     range requested by their owners.
   </p>
-  {% endif %} {% if vehicles|length > 0 %}{% for vehicle in vehicles %}
+  {% endif %}
+  {% for vehicle in vehicles %}
   <row style="border-top: 2px solid #d0d0d0; margin-top: 50px; margin-bottom: 50px; width: 100%;"></row>
   <div class="row justify-content-md-center mb-4">
       <div style="col-md">
