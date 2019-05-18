@@ -1,7 +1,7 @@
 import smartcar
 import requests
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from zeus import app
 
 CLIENT_ID = '52e8d23b-b296-4f8b-89a0-18b64fac4b38'
@@ -22,13 +22,7 @@ client = smartcar.AuthClient(
 @app.route('/auth', methods=['GET'])
 def auth():
     auth_url = client.get_auth_url()
-    return '''
-        <h1>Get Started with Zeus ⚡!</h1>
-        <h2>Optimizing EV charging queues.</h2>
-        <a href={auth_url}>
-          <button>Connect Car</button>
-        </a>
-    '''
+    return render_template('connect_car.html', auth_url=auth_url)
 
 def extended_sdk(vid, access_token, endpoint):
     url = 'https://api.smartcar.com/v1.0/vehicles/' + vid + '/' + endpoint
@@ -58,6 +52,9 @@ def callback():
 
     ##
     status = init_vehicle_data(access)
+
+    # TODO: add vid to user db
+    # TODO: store vid, info, charge, battery in vehicle db
 
     # Respond with a success status to browser
     return jsonify(status)
