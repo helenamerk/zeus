@@ -2,7 +2,7 @@ install_app:
 	pip install -e .
 
 init_db: install_app
-	rm /tmp/db.sqlite
+	rm -f /tmp/db.sqlite
 	python zeus/scripts/create_db.py
 	python zeus/scripts/seed_spots.py
 
