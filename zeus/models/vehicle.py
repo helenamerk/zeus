@@ -32,6 +32,7 @@ class Vehicle(db.Model):
 
     # Settings
     desired_range = Column(Integer)
+    departure_time = Column(DateTime)
 
     def is_queued(self):
         return self.spot is not null and not self.is_plugged_in
