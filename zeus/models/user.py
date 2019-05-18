@@ -12,8 +12,6 @@ class User(db.Model):
     vehicles = db.relationship('Vehicle', backref='user', lazy=True)
 
     # Profile settings
-    today_departure = Column(DateTime)
-    default_departure = Column(DateTime)
     billing_token = Column(String)
 
     def __init__(self, username, password):
