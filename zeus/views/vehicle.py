@@ -23,3 +23,5 @@ def queue_vehicle():
 
 @app.route('/vehicle/<vehicle_id>', methods=['GET'])
 def vehicle(vehicle_id):
+    vehicle = Vehicle.query.get(vehicle_id).refresh()
+    return render_template("vehicle.html", vehicle=vehicle)
