@@ -21,7 +21,6 @@ def signup_page():
 @app.route("/user", methods=['POST'])
 def create_user():
     form_data = request.form
-    print(form_data.getlist("username")[0])
     new_user = User(username=form_data.getlist("username")[0], password=form_data.getlist("password")[0])
     db.session.add(new_user)
     db.session.commit()
