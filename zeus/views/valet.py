@@ -3,6 +3,9 @@ from zeus import app
 from zeus.models.vehicle import Vehicle
 from zeus.utils.smartcar import smartcar
 
+def identify_next_car():
+    return {'id': '123123123', 'spot': '1101'}
+
 @app.route("/valet/login", methods=['GET'])
 def valet_login_page():
     return render_template("valet_login.html")
@@ -25,8 +28,8 @@ def valet_page():
     # proceed to flow (unplug, unlock, move, lock) ==> leaves us with a vacant spot
     #
     # valet_next_car()
-
-
+    emptySpots = []
+    
     ### 
     # Valet dashboard should contain actions on top, and data on the bottom. 
     # Data: stats about the day, ie #s of vehs in each state
@@ -38,7 +41,10 @@ def valet_page():
     completedVehicles.append({'id': '12345', 'spot': '123'})
     completedVehicles.append({'id': '12346', 'spot': '222'})
 
-    return render_template("valet_dashboard.html", vehicles=completedVehicles)
+    if len(emptySpots) > 0:
+        nextCar = identify_next_car()
+
+    return render_template("valet_dashboard.html", vehicles=completedVehicles, next_vehicle=nextCar)
 
 @app.route("/valet/<int:vehicle_id>/unlock", methods=['POST'])
 def valet_unlock(vehicle_id):
@@ -58,9 +64,8 @@ def valet_lock(vehicle_id):
     print('Record new state (NOT CHARGING) and new parking spot in db ')
 
     next_vehicle=valet_next_car()
-    
-    return redirect("/valet/dashboard")
 
+    return redirect("/valet/dashboard")
 
 @app.route("/valet/next", methods=['GET'])
 def valet_next_car():
@@ -69,6 +74,6 @@ def valet_next_car():
     """
     # calculate next car in queue
     # => proceed to flow (unlock, move, plug, lock)
-    temp_vehicle = {'id': '123123123', 'spot': '1101'}
-    return temp_vehicle
+
+    return render_template("valet_driving.html", vehicle=identify_next_car())
     
