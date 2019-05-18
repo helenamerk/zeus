@@ -20,10 +20,9 @@ def signup_page():
 
 @app.route("/user", methods=['POST'])
 def create_user():
-    data = request.get_json(force=True)
-    data["today_departure"] = datetime.fromtimestamp(data["today_departure"])
-    data["default_departure"] = datetime.fromtimestamp(data["default_departure"])
-    new_user = User(**data)
+    form_data = request.form
+    print(form_data.getlist("username")[0])
+    new_user = User(username=form_data.getlist("username")[0], password=form_data.getlist("password")[0])
     db.session.add(new_user)
     db.session.commit()
     return redirect(url_for("user_page", user_id=new_user.id))
