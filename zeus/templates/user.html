@@ -4,6 +4,10 @@
 
 {% block head %}
   <link rel="stylesheet" href="/static/login.css">
+  <script type="text/javascript" src="/path/to/jquery.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock %}
 
 {% block body %}
@@ -20,7 +24,35 @@
       </div>
     </div>
     {% else %}
+    <div class="container">
+      <form class="form text-center" method="put" action="/vehicle/queue">
+        <label for="selected_vehicle" class="sr-only">Selected Vehicle</label>
+        <select class="form-control form-control-lg" name="selected_vehicle" id="selected_vehicle">
+          {% for vehicle in vehicles %}
+          <option value="{{ vehicle.id }}">{{ "{} {} ({})".format(vehicle.make, vehicle.model, vehicle.year) }}</option>
+          {% endfor %}
+        </select>
+        <label for="desired_range" class="sr-only">Desired range</label>
+        <input name="desired_range" id="desired_range" class="form-control" placeholder="Desired Range">
+        <label for="datetimepicker3" class="sr-only">Departure after</label>
+        <div class="input-group date" id="datetimepicker3" data-target-input="nearest">
+            <input type="text" class="datetimepicker-input form-control" placeholder="Departure after" data-target="#datetimepicker3"/>
+            <div class="input-group-append" data-target="#datetimepicker3" data-toggle="datetimepicker">
+                <div class="input-group-text"><i class="fa fa-clock-o"></i></div>
+            </div>
+        </div>
+        <label for="parked_spot" class="sr-only">What spot did you park in</label>
+        <input name="parked_spot" id="parked_spot" class="form-control" placeholder="What spot did you park in">
 
+        <input class="btn btn-lg btn-primary btn-block" type="submit" value="⚡ Energize ⚡">
+      </form>
+      <script type="text/javascript">
+          $(function () {
+              $('#datetimepicker3').datetimepicker({
+                  format: 'LT'
+              });
+          });
+      </script>
      <!-- TODO collect user prefs -->
     {% endif %}
 
