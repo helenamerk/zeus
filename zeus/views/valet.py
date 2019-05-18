@@ -7,7 +7,7 @@ from sqlalchemy import and_
 
 
 def identify_next_car():
-    return {'id': '123123123', 'spot': '1101'}
+    return {'make': 'Volkswagen', 'model': 'e-Golf', 'year': 2017, 'spot': '11'}
 
 def check_threshold(busy_ev_spots):
     completedVehicles = []
