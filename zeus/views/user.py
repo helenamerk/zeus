@@ -80,6 +80,10 @@ def callback():
         access_token=access['access_token'],
         access_expiration=access['expiration'],
         refresh_token=access['refresh_token'],
+        percent_remaining=battery.percent_remaining,
+        range=battery.range,
+        charge_state=charge.state.value,
+        is_plugged_in=charge.is_plugged_in
     )
 
     db.session.add(new_vehicle)
