@@ -1,7 +1,8 @@
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, Float, String, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey
 
-engine = create_engine('sqlite:///:memory:', echo=True)
+engine = create_engine('sqlite:///db.sqlite', echo=True)
 
 Base = declarative_base()
 
@@ -19,7 +20,7 @@ class User(Base):
     default_departure = Column(DateTime)
     billing_token = Column(String)
 
-class Vehicle(Base)
+class Vehicle(Base):
     __tablename__ = 'vehicle'
 
     id = Column(Integer, primary_key=True)
@@ -41,3 +42,11 @@ class Vehicle(Base)
 
     # Settings
     desired_range = Column(Integer)
+
+class Spot(Base):
+    __tablename__ = 'spot'
+
+    id = Column(Integer, primary_key=True)
+
+    type = Column(String)
+    vehicle_id = Column(Integer, ForeignKey('vehicle.id'), nullable=True)
