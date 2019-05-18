@@ -1,10 +1,28 @@
 from flask import render_template, redirect
-from zeus import app
+from zeus import app, db
 from zeus.models.vehicle import Vehicle
-from zeus.utils.smartcar import smartcar
+from zeus.utils.smartcar import smartcar, lock, unlock, get_battery
+from zeus.models.spot import Spot, SpotType
+from sqlalchemy import and_
+
 
 def identify_next_car():
     return {'id': '123123123', 'spot': '1101'}
+
+def check_threshold(busy_ev_spots):
+    completedVehicles = []
+    print('Vehicles that are busy:')
+    print(busy_ev_spots)
+    for spot in busy_ev_spots:
+        vehicle = Vehicle.query.filter_by(id=spot.vehicle_id).first()
+        vehicle = Vehicle.query.get(spot.vehicle_id)
+        battery = get_battery(vehicle.id, vehicle.access_token)
+        print(battery)
+        if (battery.range > vehicle.desired_range):
+            print(vehicle.id + ' is beyond the requested range :)')
+            completedVehicles.append(vehicle)
+
+    return completedVehicles
 
 @app.route("/valet/login", methods=['GET'])
 def valet_login_page():
@@ -19,49 +37,40 @@ def valet_login_verify():
 
 @app.route("/valet/dashboard", methods=['GET'])
 def valet_page():
-    # TODO: 
-    # get all ev spots
-    # while spot == empty, ==> valet_next_car()
-    #
-    # elseif status >= threshold, make unlock button available
-    # 
-    # proceed to flow (unplug, unlock, move, lock) ==> leaves us with a vacant spot
-    #
-    # valet_next_car()
-    emptySpots = []
-    
-    ### 
-    # Valet dashboard should contain actions on top, and data on the bottom. 
-    # Data: stats about the day, ie #s of vehs in each state
-    # Actions: 
-        # Button(s) to move vehicle out of charging spot
-        # Button to start valet_next_car() process
-    ###
-    completedVehicles = []
-    completedVehicles.append({'id': '12345', 'spot': '123'})
-    completedVehicles.append({'id': '12346', 'spot': '222'})
-
-    if len(emptySpots) > 0:
+    # if we have empty spots, bring up next vehicle from queue!
+    nextCar = None
+    open_ev_spots = Spot.query.filter_by(vehicle_id=None, type=2).all()
+    if len(open_ev_spots) > 0:
         nextCar = identify_next_car()
+    print(open_ev_spots)
 
-    return render_template("valet_dashboard.html", vehicles=completedVehicles, next_vehicle=nextCar)
+    count_ev_spots = len(open_ev_spots)
 
-@app.route("/valet/<int:vehicle_id>/unlock", methods=['POST'])
+    # check all current chargers if vehicle has reached requested mileage   
+    busy_ev_spots = Spot.query.filter(and_(Spot.vehicle_id.isnot(None)), (Spot.type==2)).all()
+    print(busy_ev_spots)
+
+    completedVehicles = check_threshold(busy_ev_spots)
+    
+
+    return render_template("valet_dashboard.html", open_ev_spots=count_ev_spots, vehicles=completedVehicles, next_vehicle=nextCar)
+
+@app.route("/valet/<string:vehicle_id>/unlock", methods=['POST'])
 def valet_unlock(vehicle_id):
-    # vehicle = Vehicle.query.get(vehicle_id)
-    # smartcar.unlock(vehicle.id, vehicle.access_token)
+    vehicle = Vehicle.query.get(vehicle_id)
+    unlock(vehicle.id, vehicle.access_token)
     print('IMPLEMENT UNLOCKING HERE')
     # unlock vehicle id and drive
     return render_template("valet_driving.html", vehicle_id=vehicle_id)
 
-@app.route("/valet/<int:vehicle_id>/lock", methods=['POST'])
+@app.route("/valet/<string:vehicle_id>/lock", methods=['POST'])
 def valet_lock(vehicle_id):
+    
     # unlock vehicle id and drive
-    # vehicle = Vehicle.query.get(vehicle_id)
-    # smartcar.lock(vehicle.id, vehicle.access_token)
+    vehicle = Vehicle.query.get(vehicle_id)
+    lock(vehicle.id, vehicle.access_token)
 
-    print('IMPLEMENT LOCKING HERE')
-    print('Record new state (NOT CHARGING) and new parking spot in db ')
+    print('TODO: Record new state (NOT CHARGING) and new parking spot in db ')
 
     next_vehicle=valet_next_car()
 

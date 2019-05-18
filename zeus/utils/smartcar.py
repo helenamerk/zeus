@@ -38,6 +38,7 @@ def smartcar_special_request(vid, access_token, endpoint):
 
 def get_battery(vid, access_token):
     response = smartcar_special_request(vid, access_token, 'battery')
+    print(response)
     return BatteryStatus(range=response['range'], percent_remaining=response['percentRemaining'])
 
 def get_charge(vid, access_token):
@@ -45,7 +46,7 @@ def get_charge(vid, access_token):
     return ChargingStatus(state=ChargingState[response['state']], is_plugged_in=response['isPluggedIn'])
 
 def smartcar_action_request(vid, access_token, action):
-    url = 'https://api.smartcar.com/v1.0/vehicles/' + vid + '/' + endpoint
+    url = 'https://api.smartcar.com/v1.0/vehicles/' + vid + '/security'
     headers = {"Authorization": "Bearer " + access_token, "Content-Type": "application/json"}
     response = requests.post(url, headers=headers)
     payload = {"action": action}

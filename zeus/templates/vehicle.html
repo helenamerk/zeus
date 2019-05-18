@@ -15,37 +15,44 @@
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
 />
 <link rel="stylesheet" href="/static/login.css" />
-{% endblock %} {% block body %}
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Battery</th>
-      <th scope="col">Charging</th>
-      {% if vehicle.spot is not none  %}
-        <th scope="col">Estimated departure time</th>
-        <th scope="col">Parking Spot</th>
-      {% endif %}
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>{{ "{} {} ({})".format(vehicle.make, vehicle.model, vehicle.year) }}</td>
-      <td>{{ "{:.2%}".format(vehicle.percent_remaining) }}</td>
-      <td>{{ "{}".format(vehicle.charging_description()) }}</td>
-      {% if vehicle.spot is not none  %}
-        <td>{{ "{}".format(vehicle.departure_time.time()) }}</td>
-        <td>{{ "{}".format(vehicle.spot.id) }}</td>
-        <td>
-          <form class="form" method="post" action="/vehicle/dequeue">
-            <input type="hidden" id="vehicle_id" name="vehicle_id" value={{ vehicle.id }}>
-            <input class="btn btn-sm btn-primary btn-block" type="submit" value="Cancel" />
-          </form>
-        </td>
-      {% endif %}
-      </td>
-    </tr>
-  </tbody>
-</table>
-  {% endblock %}
+{% endblock %}
+{% block body %}
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1>{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</h1>
+    </div>
+  </div>
+  <div class="row">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Battery</th>
+          <th scope="col">Charge State</th>
+          {% if vehicle.spot is not none  %}
+            <th scope="col">Estimated departure time</th>
+            <th scope="col">Parking Spot</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ "{:.2%}".format(vehicle.percent_remaining) }}</td>
+          <td>{{ vehicle.charging_description() }}</td>
+          {% if vehicle.spot is not none  %}
+            <td>{{ vehicle.departure_time.time() }}</td>
+            <td>{{ vehicle.spot.id }}</td>
+          {% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {% if vehicle.spot is not none %}
+    <form class="form" method="post" action="/vehicle/dequeue">
+      <input type="hidden" id="vehicle_id" name="vehicle_id" value={{ vehicle.id }}>
+      <button class="btn btn-sm btn-outline-danger" type="submit">Cancel</button>
+    </form>
+  {% endif %}
 </div>
+{% endblock %}

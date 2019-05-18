@@ -67,9 +67,9 @@ class Vehicle(db.Model):
     def charging_description(self):
         if self.charge_state == ChargingState.FULLY_CHARGED.value:
             return "Fully Charged"
-        if self.is_plugged_in and self.charge_state == ChargingState.CHARGING.value:
+        if self.charge_state == ChargingState.CHARGING.value:
             return "Charging"
-        if not self.is_plugged_in and self.charge_state == ChargingState.NOT_CHARGING.value:
+        if self.charge_state == ChargingState.NOT_CHARGING.value:
             return "Not Charging"
         return "Possible Error"
 

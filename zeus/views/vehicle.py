@@ -24,6 +24,7 @@ def queue_vehicle():
 @app.route("/vehicle/dequeue", methods=['POST'])
 def dequeue_vehicle():
     form_data = request.form
+    print(form_data)
     vehicle = Vehicle.query.get(form_data["vehicle_id"])
     vehicle.spot = None
     vehicle.desired_range = None
