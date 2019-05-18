@@ -9,15 +9,21 @@
 {% block body %}
   <div class="container">
 
+    {% if not has_vehicle %}
     <div class="row">
       <div class="col-md">
         <div class="jumbotron">
           <h1 class="display-4">Welcome to Zeus!</h1>
           <p class="lead">To get started, click below to connect your vehicle.</p>
-          <a class="mt-4 btn btn-lg btn-primary" href="" role="button">Connect Car</a>
+          <a class="mt-4 btn btn-lg btn-primary" href="{{ auth_url  }}" role="button">Connect Car</a>
         </div>
       </div>
     </div>
+    {% endif %}
+
+    {% if has_vehicle %}
+     <!-- TODO collect user prefs -->
+    {% endif %}
 
   </div>
 {% endblock %}
