@@ -11,7 +11,7 @@ def check_threshold(busy_ev_spots):
     completedVehicles = []
     print('Vehicles that are busy:')
     for spot in busy_ev_spots:
-        print spot.vehicle_id
+        print(spot.vehicle_id)
 
         vehicle = Vehicle.query.filter_by(id=spot.vehicle_id).all()
         print(vehicle)
