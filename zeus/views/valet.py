@@ -43,6 +43,8 @@ def valet_page():
 
     if len(emptySpots) > 0:
         nextCar = identify_next_car()
+    else:
+        nextCar = None
 
     return render_template("valet_dashboard.html", vehicles=completedVehicles, next_vehicle=nextCar)
 
